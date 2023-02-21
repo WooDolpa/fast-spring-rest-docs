@@ -1,6 +1,7 @@
 package com.rest.docs.member;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
  * description    :
  */
 @Entity
+@Getter
 @Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
@@ -38,5 +40,9 @@ public class Member {
         this.name = name;
         this.createAt = LocalDateTime.now();
         this.updateAt = LocalDateTime.now();
+    }
+
+    public void modify(final String name) {
+        this.name = name;
     }
 }

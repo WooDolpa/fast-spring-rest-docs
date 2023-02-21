@@ -1,10 +1,13 @@
 package com.rest.docs.member;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * file           : MemberApi
@@ -26,8 +29,28 @@ public class MemberApi {
      *  4. Member 페이징 조회
      */
 
-    @GetMapping
-    public void createMember(@RequestBody MemberSignUpRequest dto){
+    @GetMapping("/{id}")
+    public MemberResponse getMember(@PathVariable Long id){
+        return new MemberResponse(memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Notfound")));
 
+    }
+
+    @PostMapping
+    public void createMember(@RequestBody MemberSignUpRequest dto){
+        memberRepository.save(dto.toEntity());
+    }
+
+    @PutMapping("/{id}")
+    public void modify(@PathVariable Long id,
+                       @RequestBody @Valid MemberModificationRequest dto) {
+
+        final Member member = memberRepository.findById(id).get();
+        member.modify(dto.getName());
+        memberRepository.save(member);
+    }
+
+    @GetMapping("")
+    public Page<MemberResponse> getMembers(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        return memberRepository.findAll(pageable).map(MemberResponse::new);
     }
 }
