@@ -26,6 +26,13 @@ class MemberApiTest {
     @Autowired
     private MockMvc mockMvc;
 
+    /**
+     *  1. Member 단일 조회
+     *  2. Member 생성
+     *  3. Member 수정
+     *  4. Member 페이징 조회
+     */
+
     @Test
     public void member_page_test() throws Exception {
         mockMvc.perform(get("/api/members").param("size", "10")
